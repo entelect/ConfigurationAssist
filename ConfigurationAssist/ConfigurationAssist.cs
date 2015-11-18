@@ -3,7 +3,6 @@ using ConfigurationAssist.Interfaces;
 using System;
 using System.Configuration;
 using System.Linq;
-using System.Reflection;
 
 namespace ConfigurationAssist
 {
@@ -11,15 +10,14 @@ namespace ConfigurationAssist
     {
         public T ConfigurationSection<T>() where T : ConfigurationSection, new()
         {
-            var attr = typeof(T).GetCustomAttributes(typeof(ConfigurationSectionItem), true).AsQueryable();
-            if (attr.Any())
-            {
-                return ConfigurationSection<T>(((ConfigurationSectionItem)attr.First()).SectionName);
-            }
+            var type = typeof (T);
+            var attr = type.GetCustomAttributes(typeof(ConfigurationSectionItem), true).AsQueryable();
 
-            throw new CustomAttributeFormatException(string.Format("Could not find the class attribute '{0}' on configuration section type '{1}'",
-                typeof(ConfigurationSectionItem),
-                typeof(T)));
+            var sectionName = attr.Any()
+                ? ((ConfigurationSectionItem) attr.First()).SectionName
+                : type.Name;
+
+            return ConfigurationSection<T>(sectionName);
         }
 
         public T ConfigurationSection<T>(string sectionName) where T : ConfigurationSection, new()
