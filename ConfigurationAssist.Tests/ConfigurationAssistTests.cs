@@ -18,7 +18,7 @@ namespace ConfigurationAssist.Tests
         }
 
         [Test]
-        public void ConfigurationSection_Should_ReturnTestConfiguration_When_AutomaticlinkingUsed()
+        public void ConfigurationSection_Should_ReturnConfiguration_When_NoConfigurationSectionItemAttributeSet()
         {
             var configAssist = new ConfigurationAssist();
             var config = configAssist.ConfigurationSection<AutomaticConfiguration>();
