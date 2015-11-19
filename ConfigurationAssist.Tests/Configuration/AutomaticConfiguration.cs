@@ -8,7 +8,7 @@ namespace ConfigurationAssist.Tests.Configuration
         public string Name { get; set; }
         [ConfigurationProperty("Version")]
         public string Version { get; set; }
-        //[ConfigurationProperty("Value")]
+        [ConfigurationProperty("Value")]
         public string Value { get; set; }
     }
 }

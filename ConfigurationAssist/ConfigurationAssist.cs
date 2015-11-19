@@ -17,17 +17,25 @@ namespace ConfigurationAssist
                 ? ((ConfigurationSectionItem) attr.First()).SectionName
                 : type.Name;
 
-            return ConfigurationSection<T>(sectionName);
+            var group = (attr.Any())
+                ? ((ConfigurationSectionItem) attr.First()).SectionGroup
+                : null;
+
+            return ConfigurationSection<T>(sectionName, group);
         }
 
-        public T ConfigurationSection<T>(string sectionName) where T : ConfigurationSection, new()
+        public T ConfigurationSection<T>(string sectionName, string sectionGroup = null) where T : ConfigurationSection, new()
         {
             if (string.IsNullOrEmpty(sectionName))
             {
                 throw new ArgumentNullException("sectionName");
             }
 
-            var configuration = (T)ConfigurationManager.GetSection(sectionName);
+            var fullSectionName = sectionGroup == null
+                ? sectionName
+                : string.Format("{0}/{1}", sectionGroup, sectionName);
+
+            var configuration = (T)ConfigurationManager.GetSection(fullSectionName);
             if (configuration == null)
             {
                 throw new ConfigurationErrorsException(string.Format("Could not convert the named section '{0}' to type '{1}'",
