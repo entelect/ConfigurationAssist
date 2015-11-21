@@ -58,5 +58,20 @@ namespace ConfigurationAssist.Tests
             Assert.That(testGroupOtherSection, Is.Not.Null);
             Assert.That(testGroupOtherSection.GetValue, Is.EqualTo("123"));
         }
+
+        [Test]
+        public void ConfigurationSection_Should_ReturnSectionGroupConfigs_When_GroupSpecifiedPartOfSectionName()
+        {
+            var configAssist = new ConfigurationAssist();
+            var testGroupSection = configAssist.ConfigurationSection<TestGroupSection>("TestingGroup/TestGroupSection");
+            var testGroupOtherSection = configAssist.ConfigurationSection<TestGroupOtherSection>("TestingGroup/TestGroupOtherSection");
+
+            Assert.That(testGroupSection, Is.Not.Null);
+            Assert.That(testGroupSection.Name, Is.EqualTo("MyTestGroupSectionName"));
+            Assert.That(testGroupSection.Value, Is.EqualTo("MyTestGroupSectionValue"));
+
+            Assert.That(testGroupOtherSection, Is.Not.Null);
+            Assert.That(testGroupOtherSection.GetValue, Is.EqualTo("123"));
+        }
     }
 }
