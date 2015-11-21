@@ -1,4 +1,5 @@
-﻿using ConfigurationAssist.CustomAttributes;
+﻿using System.ComponentModel;
+using ConfigurationAssist.CustomAttributes;
 using ConfigurationAssist.Interfaces;
 using System;
 using System.Configuration;
@@ -59,11 +60,28 @@ namespace ConfigurationAssist
                     continue;
                 }
 
-                var value = propertyInformation.Value;
-                property.SetValue(configuration, value, null);
+                var convertedValue = Convert(property.PropertyType, propertyInformation.Value);
+                property.SetValue(configuration, convertedValue, null);
             }
 
             return configuration;
+        }
+
+        public object Convert(Type type, object input)
+        {
+            var converter = TypeDescriptor.GetConverter(type);
+
+            if (input == null)
+            {
+                return null;
+            }
+
+            if (type.IsGenericType && type.GetGenericTypeDefinition() == typeof (Nullable<>))
+            {
+                return null;
+            }
+
+            return converter.ConvertFromString(input.ToString());
         }
     }
 }

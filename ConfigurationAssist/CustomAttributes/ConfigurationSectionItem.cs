@@ -5,7 +5,7 @@ namespace ConfigurationAssist.CustomAttributes
     [AttributeUsage(AttributeTargets.Class)]
     public class ConfigurationSectionItem : Attribute
     {
-        public ConfigurationSectionItem(string sectionName)
+        public ConfigurationSectionItem(string sectionName = null)
         {
             SectionName = sectionName;
         }

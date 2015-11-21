@@ -1,16 +1,25 @@
-﻿using ConfigurationAssist.Tests.Configuration;
+﻿using System.Configuration;
+using ConfigurationAssist.Interfaces;
+using ConfigurationAssist.Tests.Configuration;
 using NUnit.Framework;
 
 namespace ConfigurationAssist.Tests
 {
-    [TestFixture]
+    [TestFixture, Category(TestCategory.Unit)]
     public class ConfigurationAssistTests
     {
+        private IConfigurationAssist _configurationAssist;
+        
+        [OneTimeSetUp]
+        public void TestFixtureSetUp()
+        {
+            _configurationAssist = new ConfigurationAssist();
+        }
+
         [Test]
         public void ConfigurationSection_Should_ReturnTestConfiguration_When_ConfiguredCorrectly()
         {
-            var configAssist = new ConfigurationAssist();
-            var config = configAssist.ConfigurationSection<TestConfiguration>();
+            var config = _configurationAssist.ConfigurationSection<TestConfiguration>();
 
             Assert.That(config, Is.Not.Null);
             Assert.That(config.Name, Is.EqualTo("TestName"));
@@ -20,8 +29,7 @@ namespace ConfigurationAssist.Tests
         [Test]
         public void ConfigurationSection_Should_ReturnConfiguration_When_NoConfigurationSectionItemAttributeSet()
         {
-            var configAssist = new ConfigurationAssist();
-            var config = configAssist.ConfigurationSection<AutomaticConfiguration>();
+            var config = _configurationAssist.ConfigurationSection<AutomaticConfiguration>();
 
             Assert.That(config, Is.Not.Null);
             Assert.That(config.Name, Is.EqualTo("AutomaticName"));
@@ -32,9 +40,8 @@ namespace ConfigurationAssist.Tests
         [Test]
         public void ConfigurationSection_Should_ReturnSectionGroupConfigs_When_GroupSpecifiedOnAttribute()
         {
-            var configAssist = new ConfigurationAssist();
-            var testGroupSection = configAssist.ConfigurationSection<TestGroupSection>();
-            var testGroupOtherSection = configAssist.ConfigurationSection<TestGroupOtherSection>();
+            var testGroupSection = _configurationAssist.ConfigurationSection<TestGroupSection>();
+            var testGroupOtherSection = _configurationAssist.ConfigurationSection<TestGroupOtherSection>();
 
             Assert.That(testGroupSection, Is.Not.Null);
             Assert.That(testGroupSection.Name, Is.EqualTo("MyTestGroupSectionName"));
@@ -47,9 +54,8 @@ namespace ConfigurationAssist.Tests
         [Test]
         public void ConfigurationSection_Should_ReturnSectionGroupConfigs_When_GroupSpecifiedAsParameter()
         {
-            var configAssist = new ConfigurationAssist();
-            var testGroupSection = configAssist.ConfigurationSection<TestGroupSection>("TestGroupSection", "TestingGroup");
-            var testGroupOtherSection = configAssist.ConfigurationSection<TestGroupOtherSection>("TestGroupOtherSection","TestingGroup");
+            var testGroupSection = _configurationAssist.ConfigurationSection<TestGroupSection>("TestGroupSection", "TestingGroup");
+            var testGroupOtherSection = _configurationAssist.ConfigurationSection<TestGroupOtherSection>("TestGroupOtherSection", "TestingGroup");
             
             Assert.That(testGroupSection, Is.Not.Null);
             Assert.That(testGroupSection.Name, Is.EqualTo("MyTestGroupSectionName"));
@@ -62,9 +68,8 @@ namespace ConfigurationAssist.Tests
         [Test]
         public void ConfigurationSection_Should_ReturnSectionGroupConfigs_When_GroupSpecifiedPartOfSectionName()
         {
-            var configAssist = new ConfigurationAssist();
-            var testGroupSection = configAssist.ConfigurationSection<TestGroupSection>("TestingGroup/TestGroupSection");
-            var testGroupOtherSection = configAssist.ConfigurationSection<TestGroupOtherSection>("TestingGroup/TestGroupOtherSection");
+            var testGroupSection = _configurationAssist.ConfigurationSection<TestGroupSection>("TestingGroup/TestGroupSection");
+            var testGroupOtherSection = _configurationAssist.ConfigurationSection<TestGroupOtherSection>("TestingGroup/TestGroupOtherSection");
 
             Assert.That(testGroupSection, Is.Not.Null);
             Assert.That(testGroupSection.Name, Is.EqualTo("MyTestGroupSectionName"));
@@ -72,6 +77,27 @@ namespace ConfigurationAssist.Tests
 
             Assert.That(testGroupOtherSection, Is.Not.Null);
             Assert.That(testGroupOtherSection.GetValue, Is.EqualTo("123"));
+        }
+
+        [Test]
+        public void ConfigurationSection_Should_ReturnNotThrowException_When_ConfigurationWithPrimitivesPropertiesOtherThanStringCalled()
+        {
+            var typedPropertiesConfiguration = _configurationAssist.ConfigurationSection<TypedPropertiesConfiguration>();
+
+            Assert.That(typedPropertiesConfiguration, Is.Not.Null);
+            Assert.That(typedPropertiesConfiguration.DecimalValue, Is.EqualTo(12.4m));
+            Assert.That(typedPropertiesConfiguration.DoubleValue, Is.EqualTo(123.43d));
+            Assert.That(typedPropertiesConfiguration.IntValue, Is.EqualTo(1));
+            Assert.That(typedPropertiesConfiguration.LongValue, Is.EqualTo(23L));
+            Assert.That(typedPropertiesConfiguration.StringValue, Is.EqualTo("Test"));
+            Assert.That(typedPropertiesConfiguration.NotConfigured, Is.EqualTo(string.Empty));
+            Assert.That(typedPropertiesConfiguration.NotConfiguredNullableInt, Is.Null);
+        }
+
+        [Test]
+        public void ConfigurationSection_Should_ThrowConfigurationErrorsException_When_ConfigurationPrimitiveDiffersFromConfigrationValue()
+        {
+            Assert.Throws<ConfigurationErrorsException>(() => _configurationAssist.ConfigurationSection<TypedPropertiesConfigurationFailCase>());
         }
     }
 }

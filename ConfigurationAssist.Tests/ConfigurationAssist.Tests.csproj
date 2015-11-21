@@ -49,10 +49,15 @@
     <Compile Include="Configuration\TestConfiguration.cs" />
     <Compile Include="Configuration\TestGroupOtherSection.cs" />
     <Compile Include="Configuration\TestGroupSection.cs" />
+    <Compile Include="Configuration\TypedPropertiesConfiguration.cs" />
+    <Compile Include="Configuration\TypedPropertiesConfigurationFailCase.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TestCategory.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="App.config" />
+    <None Include="App.config">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
