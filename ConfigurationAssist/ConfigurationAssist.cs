@@ -1,4 +1,4 @@
-﻿using System.ComponentModel;
+﻿using ConfigurationAssist.ConfigurationExtractionStrategies;
 using ConfigurationAssist.CustomAttributes;
 using ConfigurationAssist.Interfaces;
 using System;
@@ -11,21 +11,15 @@ namespace ConfigurationAssist
     {
         public T ConfigurationSection<T>() where T : ConfigurationSection, new()
         {
-            var type = typeof (T);
-            var attr = type.GetCustomAttributes(typeof(ConfigurationSectionItem), true).AsQueryable();
+            var configurationAttributeItem = GetConfigurationSectionItem(typeof(T));
 
-            var sectionName = attr.Any()
-                ? ((ConfigurationSectionItem) attr.First()).SectionName
-                : type.Name;
-
-            var group = (attr.Any())
-                ? ((ConfigurationSectionItem) attr.First()).SectionGroup
-                : null;
-
-            return ConfigurationSection<T>(sectionName, group);
+            return ConfigurationSection<T>(
+                configurationAttributeItem.SectionName,
+                configurationAttributeItem.SectionGroup);
         }
-
-        public T ConfigurationSection<T>(string sectionName, string sectionGroup = null) where T : ConfigurationSection, new()
+      
+        public T ConfigurationSection<T>(string sectionName, string sectionGroup = null)
+            where T : ConfigurationSection, new()
         {
             if (string.IsNullOrEmpty(sectionName))
             {
@@ -36,88 +30,40 @@ namespace ConfigurationAssist
                 ? sectionName
                 : string.Format("{0}/{1}", sectionGroup, sectionName);
 
-            var configuration = (T)ConfigurationManager.GetSection(fullSectionName);
-            if (configuration == null)
+            var extractionStrategy = new CustomTypeSectionExtractionStrategy
             {
-                throw new ConfigurationErrorsException(string.Format("Could not convert the named section '{0}' to type '{1}'",
-                    sectionName,
-                    typeof(T)));
-            }
+                FullSectionName = fullSectionName
+            };
 
-            var properties = typeof(T).GetProperties();
-            foreach (var property in properties)
-            {
-                var attribute = property.GetCustomAttributes(typeof(ConfigurationPropertyAttribute), true);
-                if (!attribute.Any())
-                {
-                    continue;
-                }
-
-                var name = ((ConfigurationPropertyAttribute)attribute.First()).Name;
-                var propertyInformation = configuration.ElementInformation.Properties[name];
-                if (propertyInformation == null)
-                {
-                    continue;
-                }
-
-                var convertedValue = Convert(property.PropertyType, propertyInformation.Value);
-                property.SetValue(configuration, convertedValue, null);
-            }
-
-            return configuration;
+            return extractionStrategy.ExtractConfiguration<T>();
         }
 
         public T AppSettings<T>() where T: class, new()
         {
-            var configuration = new T();
-
-            var properties = typeof(T).GetProperties();
-            foreach (var property in properties)
-            {
-                string keyName;
-                var attribute = property.GetCustomAttributes(typeof(ConfigurationPropertyAttribute), true);
-                if (!attribute.Any())
-                {
-                    keyName = property.Name;
-                    if (!ConfigurationManager.AppSettings.AllKeys.Contains(keyName))
-                    {
-                        continue;
-                    }
-                }
-                else
-                {
-                    var configurationProperty = (ConfigurationPropertyAttribute) attribute.First();
-                    keyName = ((ConfigurationPropertyAttribute) attribute.First()).Name;
-                    if (!ConfigurationManager.AppSettings.AllKeys.Contains(keyName))
-                    {
-                        var convertedDefault = Convert(property.PropertyType, configurationProperty.DefaultValue);
-                        property.SetValue(configuration, convertedDefault, null);
-                        continue;
-                    }
-                }
-                
-                var convertedValue = Convert(property.PropertyType, ConfigurationManager.AppSettings[keyName]);
-                property.SetValue(configuration, convertedValue, null);
-            }
-
-            return configuration;
+            var extractionStrategy = new AppSettingExtractionStrategy();
+            return extractionStrategy.ExtractConfiguration<T>();
         }
 
-        private object Convert(Type type, object input)
+        public T ExtractSettings<T>(IConfigurationExtractionStrategy extractionStrategy) where T : class, new()
         {
-            var converter = TypeDescriptor.GetConverter(type);
+            return extractionStrategy.ExtractConfiguration<T>();
+        }
 
-            if (input == null)
+        public T ExtractSettings<T>(IConfigurationSectionExtractionStrategy extractionStrategy) where T : ConfigurationSection, new()
+        {
+            return extractionStrategy.ExtractConfiguration<T>();
+        }
+
+
+        private ConfigurationSectionItem GetConfigurationSectionItem(Type type)
+        {
+            var attr = type.GetCustomAttributes(typeof(ConfigurationSectionItem), true).AsQueryable();
+            if (attr.Any())
             {
-                return null;
+                return (ConfigurationSectionItem) attr.First();
             }
 
-            if (type.IsGenericType && type.GetGenericTypeDefinition() == typeof (Nullable<>))
-            {
-                return null;
-            }
-
-            return converter.ConvertFromString(input.ToString());
+            return new ConfigurationSectionItem(type.Name);
         }
     }
 }
