@@ -45,6 +45,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ConfigurationAssistTests.cs" />
+    <Compile Include="Configuration\AppSettingsConfiguration.cs" />
     <Compile Include="Configuration\AutomaticConfiguration.cs" />
     <Compile Include="Configuration\TestConfiguration.cs" />
     <Compile Include="Configuration\TestGroupOtherSection.cs" />

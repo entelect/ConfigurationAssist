@@ -99,5 +99,18 @@ namespace ConfigurationAssist.Tests
         {
             Assert.Throws<ConfigurationErrorsException>(() => _configurationAssist.ConfigurationSection<TypedPropertiesConfigurationFailCase>());
         }
+
+        [Test]
+        public void AppSettings_Should_ReturnConfigurationWithAllPropertiesMapped_When_ValidConfigurationTypeRequested()
+        {
+            var configuration = _configurationAssist.AppSettings<AppSettingsConfiguration>();
+
+            Assert.That(configuration, Is.Not.Null);
+            Assert.That(configuration.TestIntValue, Is.EqualTo(42));
+            Assert.That(configuration.TestName, Is.EqualTo("AppSettingTest"));
+            Assert.That(configuration.MinimumDiscount, Is.EqualTo(33.33m));
+            Assert.That(configuration.NullDouble, Is.Null);
+            Assert.That(configuration.MaxFileLength, Is.EqualTo(128000000));
+        }
     }
 }

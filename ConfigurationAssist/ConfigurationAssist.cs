@@ -67,7 +67,43 @@ namespace ConfigurationAssist
             return configuration;
         }
 
-        public object Convert(Type type, object input)
+        public T AppSettings<T>() where T: class, new()
+        {
+            var configuration = new T();
+
+            var properties = typeof(T).GetProperties();
+            foreach (var property in properties)
+            {
+                string keyName;
+                var attribute = property.GetCustomAttributes(typeof(ConfigurationPropertyAttribute), true);
+                if (!attribute.Any())
+                {
+                    keyName = property.Name;
+                    if (!ConfigurationManager.AppSettings.AllKeys.Contains(keyName))
+                    {
+                        continue;
+                    }
+                }
+                else
+                {
+                    var configurationProperty = (ConfigurationPropertyAttribute) attribute.First();
+                    keyName = ((ConfigurationPropertyAttribute) attribute.First()).Name;
+                    if (!ConfigurationManager.AppSettings.AllKeys.Contains(keyName))
+                    {
+                        var convertedDefault = Convert(property.PropertyType, configurationProperty.DefaultValue);
+                        property.SetValue(configuration, convertedDefault, null);
+                        continue;
+                    }
+                }
+                
+                var convertedValue = Convert(property.PropertyType, ConfigurationManager.AppSettings[keyName]);
+                property.SetValue(configuration, convertedValue, null);
+            }
+
+            return configuration;
+        }
+
+        private object Convert(Type type, object input)
         {
             var converter = TypeDescriptor.GetConverter(type);
 
