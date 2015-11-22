@@ -26,13 +26,20 @@
 
 <ul>
 <li>Mapping AppSettings to Config Classes</li>
-<li>Mapping Config Sections to strongly typed Config Classes</li>
-<li>Mapping Config Sections in Groups to strongly typed Config Classes</li>
+<li>Mapping Config Sections in Groups to the below types:
+
+<ul>
+<li>Mapping Config Sections to custom ConfigurationSection typed Config Classes</li>
+<li>Mapping Config Sections that use NameValueSectionHandler</li>
+<li>Mapping Config Sections that use DictionarySectionHandler</li>
+<li>Mapping Config Sections that use SingleTagSectionHandler</li>
+</ul>
+</li>
 </ul>
 
 <p>Its often convenient to split app/web.config keys into logical groupings. This is where Configuration Sections come in handy. Its long supported feature of .Net but can be a little tedious if you want to strongly type the section.</p>
 
-<p>ConfigurationAssist is here to help remove the CRUD involved in using config sections on strongly typed object.
+<p>ConfigurationAssist is here to help remove the CRUD involved in using config sections on strongly typed objects.
 It will also allow mapping to the keys in AppSetting and remove the tedium of converting the keys to other primitive types.</p>
 
 <h1>
@@ -48,6 +55,8 @@ It will also allow mapping to the keys in AppSetting and remove the tedium of co
 
 <p><a href="https://github.com/JeremyBOB81/ConfigurationAssist/wiki/Non-String-Values">Non-String Values</a></p>
 
+<p><a href="https://github.com/JeremyBOB81/ConfigurationAssist/wiki/Section-Types-and-Strategies-Explained">Section Types and Strategies Explained</a></p>
+
 <h1>
 <a id="installation" class="anchor" href="#installation" aria-hidden="true"><span class="octicon octicon-link"></span></a>Installation</h1>
 
@@ -60,11 +69,6 @@ It will also allow mapping to the keys in AppSetting and remove the tedium of co
 
 <h1>
 <a id="upcoming" class="anchor" href="#upcoming" aria-hidden="true"><span class="octicon octicon-link"></span></a>Upcoming</h1>
-
-<h2>
-<a id="config-section-keyvalue-mapping" class="anchor" href="#config-section-keyvalue-mapping" aria-hidden="true"><span class="octicon octicon-link"></span></a>Config Section KeyValue Mapping</h2>
-
-<p>Its also possible to use a configuration section as key/value pairs similar to how AppSettings works. I want to allow wiring those types of sections into the requested class object.</p>
 
 <h2>
 <a id="cleaner-section-group-mapping" class="anchor" href="#cleaner-section-group-mapping" aria-hidden="true"><span class="octicon octicon-link"></span></a>Cleaner Section Group Mapping</h2>
