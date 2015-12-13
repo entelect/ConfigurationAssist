@@ -248,5 +248,26 @@ namespace ConfigurationAssist.Tests
             Assert.That(settings.Value, Is.EqualTo(34.12));
             Assert.That(settings.BaseValue, Is.EqualTo(0));
         }
+
+        [Test]
+        public void ExtractSettings_Should_ReturnSettings_When_NoParametersPassedIn()
+        {
+            var appSettings = _configurationAssist.ExtractSettings<AppSettingsConfiguration>();
+            Assert.That(appSettings, Is.Not.Null);
+            
+            var dictionarySettings = _configurationAssist.ExtractSettings<DictionarySectionConfiguration>();
+            Assert.That(dictionarySettings, Is.Not.Null);
+
+            var singleTagSettings = _configurationAssist.ExtractSettings<SingleTagSectionConfiguration>();
+            Assert.That(singleTagSettings, Is.Not.Null);
+
+            var customSettings = _configurationAssist.ExtractSettings<TestConfiguration>();
+            Assert.That(customSettings, Is.Not.Null);
+
+            var groupedCustomSettings = _configurationAssist.ExtractSettings<TestGroupSection>();
+            Assert.That(groupedCustomSettings, Is.Not.Null);
+
+            
+        }
     }
 }

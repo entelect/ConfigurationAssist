@@ -50,9 +50,13 @@ namespace ConfigurationAssist
             return extractionStrategy.ExtractConfiguration<T>();
         }
 
-        public T ExtractSettings<T>(IConfigurationSectionExtractionStrategy extractionStrategy) where T : ConfigurationSection, new()
+        public T ExtractSettings<T>() where T : class, new()
         {
-            return extractionStrategy.ExtractConfiguration<T>();
+            var factory = new ExtractionStrategyFactory();
+            var strategy = factory.GetExtractionStrategy<T>();
+            return strategy == null 
+                ? null : 
+                strategy.ExtractConfiguration<T>();
         }
 
         public T TryExtractSettings<T>(IConfigurationExtractionStrategy extractionStrategy) where T : class, new()
@@ -61,24 +65,24 @@ namespace ConfigurationAssist
             {
                 return ExtractSettings<T>(extractionStrategy);
             }
-            catch (Exception)
+            catch
             {
                 var configHelper = new ConfigHelperService();
                 return configHelper.CreateSettingsWithDefaults<T>();
             }
         }
 
-        public T TryExtractSettings<T>(IConfigurationSectionExtractionStrategy extractionStrategy)
-            where T : ConfigurationSection, new()
+        public T TryExtractSettings<T>() where T : class, new()
         {
             try
             {
-                return ExtractSettings<T>(extractionStrategy);
+                return ExtractSettings<T>();
             }
-            catch (Exception)
+            catch
             {
                 var configHelper = new ConfigHelperService();
                 return configHelper.CreateSettingsWithDefaults<T>();
+                throw;
             }
         }
 
