@@ -19,7 +19,14 @@ namespace ConfigurationAssist.Common
                 return null;
             }
 
-            return converter.ConvertFromString(input.ToString());
+            try
+            {
+                return converter.ConvertFromString(input.ToString());
+            }
+            catch
+            {
+                return null;
+            }
         }
     }
 }

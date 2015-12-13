@@ -1,4 +1,5 @@
-﻿using ConfigurationAssist.ConfigurationExtractionStrategies;
+﻿using ConfigurationAssist.Common;
+using ConfigurationAssist.ConfigurationExtractionStrategies;
 using ConfigurationAssist.CustomAttributes;
 using ConfigurationAssist.Interfaces;
 using System;
@@ -54,6 +55,32 @@ namespace ConfigurationAssist
             return extractionStrategy.ExtractConfiguration<T>();
         }
 
+        public T TryExtractSettings<T>(IConfigurationExtractionStrategy extractionStrategy) where T : class, new()
+        {
+            try
+            {
+                return ExtractSettings<T>(extractionStrategy);
+            }
+            catch (Exception)
+            {
+                var configHelper = new ConfigHelperService();
+                return configHelper.CreateSettingsWithDefaults<T>();
+            }
+        }
+
+        public T TryExtractSettings<T>(IConfigurationSectionExtractionStrategy extractionStrategy)
+            where T : ConfigurationSection, new()
+        {
+            try
+            {
+                return ExtractSettings<T>(extractionStrategy);
+            }
+            catch (Exception)
+            {
+                var configHelper = new ConfigHelperService();
+                return configHelper.CreateSettingsWithDefaults<T>();
+            }
+        }
 
         private ConfigurationSectionItem GetConfigurationSectionItem(Type type)
         {

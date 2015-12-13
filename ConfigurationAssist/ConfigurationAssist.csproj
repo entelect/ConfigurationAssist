@@ -37,6 +37,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Common\Conversion.cs" />
+    <Compile Include="Common\ConfigHelperService.cs" />
     <Compile Include="ConfigurationAssist.cs" />
     <Compile Include="ConfigurationExtractionStrategies\AppSettingExtractionStrategy.cs" />
     <Compile Include="ConfigurationExtractionStrategies\CustomTypeSectionExtractionStrategy.cs" />

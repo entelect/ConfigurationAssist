@@ -236,5 +236,17 @@ namespace ConfigurationAssist.Tests
         {
             Assert.Throws<ConfigurationErrorsException>(() => _configurationAssist.ExtractSettings<TypedPropertiesConfigurationFailCase>(new CustomTypeSectionExtractionStrategy()));
         }
+
+        [Test]
+        public void TryExtractSettings_Should_ReturnDefaultObject_When_ExceptionThrownInExtraction()
+        {
+            //First we test our fail scenario so we know our success scenario works correctly
+            Assert.Throws<ConfigurationErrorsException>(() => _configurationAssist.ExtractSettings<FailConfigSection>(new SingleTagSectionHandlerExtractionStrategy()));
+
+            var settings = _configurationAssist.TryExtractSettings<FailConfigSection>(new SingleTagSectionHandlerExtractionStrategy());
+            Assert.That(settings, Is.Not.Null);
+            Assert.That(settings.Value, Is.EqualTo(34.12));
+            Assert.That(settings.BaseValue, Is.EqualTo(0));
+        }
     }
 }
