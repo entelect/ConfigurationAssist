@@ -254,20 +254,29 @@ namespace ConfigurationAssist.Tests
         {
             var appSettings = _configurationAssist.ExtractSettings<AppSettingsConfiguration>();
             Assert.That(appSettings, Is.Not.Null);
+            Assert.That(appSettings.TestIntValue, Is.EqualTo(42));
+            Assert.That(appSettings.TestName, Is.EqualTo("AppSettingTest"));
+            Assert.That(appSettings.MinimumDiscount, Is.EqualTo(33.33m));
+            Assert.That(appSettings.NullDouble, Is.Null);
+            Assert.That(appSettings.MaxFileLength, Is.EqualTo(128000000));
             
             var dictionarySettings = _configurationAssist.ExtractSettings<DictionarySectionConfiguration>();
             Assert.That(dictionarySettings, Is.Not.Null);
+            Assert.That(dictionarySettings.Name, Is.EqualTo("DictionaryTest"));
 
             var singleTagSettings = _configurationAssist.ExtractSettings<SingleTagSectionConfiguration>();
             Assert.That(singleTagSettings, Is.Not.Null);
+            Assert.That(singleTagSettings.Name, Is.EqualTo("SingleTagTest"));
 
             var customSettings = _configurationAssist.ExtractSettings<TestConfiguration>();
             Assert.That(customSettings, Is.Not.Null);
+            Assert.That(customSettings.Name, Is.EqualTo("TestName"));
+            Assert.That(customSettings.Version, Is.EqualTo("1.0.0.0"));
 
             var groupedCustomSettings = _configurationAssist.ExtractSettings<TestGroupSection>();
             Assert.That(groupedCustomSettings, Is.Not.Null);
-
-            
+            Assert.That(groupedCustomSettings.Name, Is.EqualTo("MyTestGroupSectionName"));
+            Assert.That(groupedCustomSettings.Value, Is.EqualTo("MyTestGroupSectionValue"));
         }
     }
 }
