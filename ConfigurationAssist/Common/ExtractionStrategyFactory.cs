@@ -18,7 +18,7 @@ namespace ConfigurationAssist.Common
             try
             {
                 var section = ConfigurationManager.GetSection(configurationFullName);
-                var sectionStrategy =  GetSectionExtractionStrategy(section);
+                var sectionStrategy =  GetSectionExtractionStrategy(section, configurationFullName);
                 return sectionStrategy ?? new AppSettingExtractionStrategy();
             }
             catch (ConfigurationErrorsException)
@@ -29,14 +29,14 @@ namespace ConfigurationAssist.Common
 
         private string GetConfigurationName(Type type)
         {
+            var sectionName = type.Name;
             var attr = type.GetCustomAttributes(typeof(ConfigurationSectionItem), true).AsQueryable();
             if (!attr.Any())
             {
-                return type.Name;
+                return sectionName;
             }
 
             var section = (ConfigurationSectionItem)attr.First();
-            var sectionName = string.Empty;
             if (!string.IsNullOrEmpty(section.SectionName))
             {
                 sectionName = section.SectionName;
@@ -50,21 +50,21 @@ namespace ConfigurationAssist.Common
             return sectionName;
         }
 
-        private IConfigurationExtractionStrategy GetSectionExtractionStrategy(object section)
+        private IConfigurationExtractionStrategy GetSectionExtractionStrategy(object section, string fullSectionName)
         {
             if (section is Hashtable)
             {
-                return new SingleTagSectionHandlerExtractionStrategy();
+                return new SingleTagSectionHandlerExtractionStrategy(fullSectionName);
             }
 
             if (section is NameValueCollection)
             {
-                return new NameValueHandlerSectionExtractionStrategy();
+                return new NameValueHandlerSectionExtractionStrategy(fullSectionName);
             }
 
             if (section is ConfigurationSection)
             {
-                return new CustomTypeSectionExtractionStrategy();
+                return new CustomTypeSectionExtractionStrategy(fullSectionName);
             }
 
             return null;
