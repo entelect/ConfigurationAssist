@@ -290,5 +290,14 @@ namespace ConfigurationAssist.Tests
             Assert.That(settings.Value, Is.EqualTo(34.12));
             Assert.That(settings.BaseValue, Is.EqualTo(0));
         }
+
+        [Test]
+        public void ExtractSettings_Should_ReturnConfiguration_When_OnlySectionGroupSpecifiedAndSectionNameSameAsClass()
+        {
+            var settings = _configurationAssist.ExtractSettings<TestSectionOnlyGroupSpecified>();
+            Assert.That(settings, Is.Not.Null);
+            Assert.That(settings.Name, Is.EqualTo("TestName"));
+            Assert.That(settings.Value, Is.EqualTo("TestValue"));
+        }
     }
 }

@@ -48,6 +48,7 @@
     <Compile Include="Configuration\TestConfiguration.cs" />
     <Compile Include="Configuration\TestGroupOtherSection.cs" />
     <Compile Include="Configuration\TestGroupSection.cs" />
+    <Compile Include="Configuration\TestSectionOnlyGroupSpecified.cs" />
     <Compile Include="Configuration\TypedPropertiesConfiguration.cs" />
     <Compile Include="Configuration\TypedPropertiesConfigurationFailCase.cs" />
     <Compile Include="Configuration\ValueKeySectionConfiguration.cs" />

@@ -11,6 +11,11 @@ namespace ConfigurationAssist.ConfigurationExtractionStrategies
     {
         private readonly Conversion _converter;
 
+        public CustomTypeSectionExtractionStrategy(string fullSectionName) : this()
+        {
+            FullSectionName = fullSectionName;
+        }
+
         public CustomTypeSectionExtractionStrategy()
         {
             _converter = new Conversion();
