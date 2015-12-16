@@ -53,5 +53,5 @@ var configAssistant = new ConfigurationAssist.ConfigurationAssist();
 var testProperties = configAssistant.ExtractSettings<TestProperties>();
 ```
 
-Please read the Wiki for examples:
+Please read the Wiki for more advanced examples and also how to sub group AppSettings:
 https://github.com/JeremyBOB81/ConfigurationAssist/wiki
