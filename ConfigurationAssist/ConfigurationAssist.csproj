@@ -37,6 +37,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Common\Conversion.cs" />
+    <Compile Include="Common\ConfigHelperService.cs" />
+    <Compile Include="Common\ExtractionStrategyFactory.cs" />
     <Compile Include="ConfigurationAssist.cs" />
     <Compile Include="ConfigurationExtractionStrategies\AppSettingExtractionStrategy.cs" />
     <Compile Include="ConfigurationExtractionStrategies\CustomTypeSectionExtractionStrategy.cs" />
@@ -46,7 +48,6 @@
     <Compile Include="CustomAttributes\ConfigurationSectionItem.cs" />
     <Compile Include="Interfaces\IConfigurationAssist.cs" />
     <Compile Include="Interfaces\IConfigurationExtractionStrategy.cs" />
-    <Compile Include="Interfaces\IConfigurationSectionExtractionStrategy.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -43,10 +43,12 @@
     <Compile Include="Configuration\AppSettingsConfiguration.cs" />
     <Compile Include="Configuration\AutomaticConfiguration.cs" />
     <Compile Include="Configuration\DictionarySectionConfiguration.cs" />
+    <Compile Include="Configuration\FailConfigSection.cs" />
     <Compile Include="Configuration\SingleTagSectionConfiguration.cs" />
     <Compile Include="Configuration\TestConfiguration.cs" />
     <Compile Include="Configuration\TestGroupOtherSection.cs" />
     <Compile Include="Configuration\TestGroupSection.cs" />
+    <Compile Include="Configuration\TestSectionOnlyGroupSpecified.cs" />
     <Compile Include="Configuration\TypedPropertiesConfiguration.cs" />
     <Compile Include="Configuration\TypedPropertiesConfigurationFailCase.cs" />
     <Compile Include="Configuration\ValueKeySectionConfiguration.cs" />

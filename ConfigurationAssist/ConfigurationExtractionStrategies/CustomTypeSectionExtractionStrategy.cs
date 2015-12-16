@@ -7,9 +7,14 @@ using ConfigurationAssist.Interfaces;
 
 namespace ConfigurationAssist.ConfigurationExtractionStrategies
 {
-    public class CustomTypeSectionExtractionStrategy : IConfigurationSectionExtractionStrategy
+    public class CustomTypeSectionExtractionStrategy : IConfigurationExtractionStrategy
     {
         private readonly Conversion _converter;
+
+        public CustomTypeSectionExtractionStrategy(string fullSectionName) : this()
+        {
+            FullSectionName = fullSectionName;
+        }
 
         public CustomTypeSectionExtractionStrategy()
         {
@@ -18,8 +23,14 @@ namespace ConfigurationAssist.ConfigurationExtractionStrategies
 
         public string FullSectionName { get; set; }
         
-        public T ExtractConfiguration<T>() where T : ConfigurationSection, new()
+        public T ExtractConfiguration<T>() where T : class, new()
         {
+            return ExtractConfigurationSection<T>();
+        }
+
+        private T ExtractConfigurationSection<T>() where T : class, new()
+        {
+
             if (string.IsNullOrEmpty(FullSectionName))
             {
                 FullSectionName = GetConfigurationSectionName(typeof(T));
@@ -33,6 +44,14 @@ namespace ConfigurationAssist.ConfigurationExtractionStrategies
                     typeof(T)));
             }
 
+            var baseType = configuration as ConfigurationSection;
+            if (baseType == null)
+            {
+                throw new ConfigurationErrorsException(
+                    string.Format("The strategy exectuted for {0} is not inherited from type ConfigurationSection",
+                        typeof(T).Name));
+            }
+
             var properties = typeof(T).GetProperties();
             foreach (var property in properties)
             {
@@ -43,13 +62,13 @@ namespace ConfigurationAssist.ConfigurationExtractionStrategies
                 }
 
                 var name = ((ConfigurationPropertyAttribute)attribute.First()).Name;
-                var propertyInformation = configuration.ElementInformation.Properties[name];
-                if (propertyInformation == null)
+                var propertyValue = baseType.ElementInformation.Properties[name];
+                if (propertyValue == null)
                 {
                     continue;
                 }
 
-                var convertedValue = _converter.Convert(property.PropertyType, propertyInformation.Value);
+                var convertedValue = _converter.Convert(property.PropertyType, propertyValue.Value);
                 property.SetValue(configuration, convertedValue, null);
             }
 

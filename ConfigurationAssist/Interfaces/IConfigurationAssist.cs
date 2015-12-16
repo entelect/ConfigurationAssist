@@ -14,6 +14,8 @@ namespace ConfigurationAssist.Interfaces
         T AppSettings<T>() where T : class, new();
 
         T ExtractSettings<T>(IConfigurationExtractionStrategy extractionStrategy) where T : class, new();
-        T ExtractSettings<T>(IConfigurationSectionExtractionStrategy extractionStrategy) where T : ConfigurationSection, new();
+        T ExtractSettings<T>() where T : class, new();
+        T TryExtractSettings<T>(IConfigurationExtractionStrategy extractionStrategy) where T : class, new();
+        T TryExtractSettings<T>() where T : class, new();
     }
 }

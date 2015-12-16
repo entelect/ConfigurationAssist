@@ -236,5 +236,68 @@ namespace ConfigurationAssist.Tests
         {
             Assert.Throws<ConfigurationErrorsException>(() => _configurationAssist.ExtractSettings<TypedPropertiesConfigurationFailCase>(new CustomTypeSectionExtractionStrategy()));
         }
+
+        [Test]
+        public void TryExtractSettings_Should_ReturnDefaultObject_When_ExceptionThrownInExtraction()
+        {
+            //First we test our fail scenario so we know our success scenario works correctly
+            Assert.Throws<ConfigurationErrorsException>(() => _configurationAssist.ExtractSettings<FailConfigSection>(new SingleTagSectionHandlerExtractionStrategy()));
+
+            var settings = _configurationAssist.TryExtractSettings<FailConfigSection>(new SingleTagSectionHandlerExtractionStrategy());
+            Assert.That(settings, Is.Not.Null);
+            Assert.That(settings.Value, Is.EqualTo(34.12));
+            Assert.That(settings.BaseValue, Is.EqualTo(0));
+        }
+
+        [Test]
+        public void ExtractSettings_Should_ReturnSettings_When_NoParametersPassedIn()
+        {
+            var appSettings = _configurationAssist.ExtractSettings<AppSettingsConfiguration>();
+            Assert.That(appSettings, Is.Not.Null);
+            Assert.That(appSettings.TestIntValue, Is.EqualTo(42));
+            Assert.That(appSettings.TestName, Is.EqualTo("AppSettingTest"));
+            Assert.That(appSettings.MinimumDiscount, Is.EqualTo(33.33m));
+            Assert.That(appSettings.NullDouble, Is.Null);
+            Assert.That(appSettings.MaxFileLength, Is.EqualTo(128000000));
+            
+            var dictionarySettings = _configurationAssist.ExtractSettings<DictionarySectionConfiguration>();
+            Assert.That(dictionarySettings, Is.Not.Null);
+            Assert.That(dictionarySettings.Name, Is.EqualTo("DictionaryTest"));
+
+            var singleTagSettings = _configurationAssist.ExtractSettings<SingleTagSectionConfiguration>();
+            Assert.That(singleTagSettings, Is.Not.Null);
+            Assert.That(singleTagSettings.Name, Is.EqualTo("SingleTagTest"));
+
+            var customSettings = _configurationAssist.ExtractSettings<TestConfiguration>();
+            Assert.That(customSettings, Is.Not.Null);
+            Assert.That(customSettings.Name, Is.EqualTo("TestName"));
+            Assert.That(customSettings.Version, Is.EqualTo("1.0.0.0"));
+
+            var groupedCustomSettings = _configurationAssist.ExtractSettings<TestGroupSection>();
+            Assert.That(groupedCustomSettings, Is.Not.Null);
+            Assert.That(groupedCustomSettings.Name, Is.EqualTo("MyTestGroupSectionName"));
+            Assert.That(groupedCustomSettings.Value, Is.EqualTo("MyTestGroupSectionValue"));
+        }
+
+        [Test]
+        public void TryExtractSettings_Should_ReturnDefaultObject_When_ExceptionThrownInExtractionAndNoStrategySpecified()
+        {
+            //First we test our fail scenario so we know our success scenario works correctly
+            Assert.Throws<ConfigurationErrorsException>(() => _configurationAssist.ExtractSettings<FailConfigSection>(new SingleTagSectionHandlerExtractionStrategy()));
+
+            var settings = _configurationAssist.TryExtractSettings<FailConfigSection>(new SingleTagSectionHandlerExtractionStrategy());
+            Assert.That(settings, Is.Not.Null);
+            Assert.That(settings.Value, Is.EqualTo(34.12));
+            Assert.That(settings.BaseValue, Is.EqualTo(0));
+        }
+
+        [Test]
+        public void ExtractSettings_Should_ReturnConfiguration_When_OnlySectionGroupSpecifiedAndSectionNameSameAsClass()
+        {
+            var settings = _configurationAssist.ExtractSettings<TestSectionOnlyGroupSpecified>();
+            Assert.That(settings, Is.Not.Null);
+            Assert.That(settings.Name, Is.EqualTo("TestName"));
+            Assert.That(settings.Value, Is.EqualTo("TestValue"));
+        }
     }
 }

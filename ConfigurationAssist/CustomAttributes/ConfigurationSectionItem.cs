@@ -5,7 +5,11 @@ namespace ConfigurationAssist.CustomAttributes
     [AttributeUsage(AttributeTargets.Class)]
     public class ConfigurationSectionItem : Attribute
     {
-        public ConfigurationSectionItem(string sectionName = null)
+        public ConfigurationSectionItem()
+        {
+        }
+
+        public ConfigurationSectionItem(string sectionName = null) :this()
         {
             SectionName = sectionName;
         }
