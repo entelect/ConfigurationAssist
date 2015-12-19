@@ -13,7 +13,7 @@ Below we will show a full example using a SingleTag type section:
 
 #SingleTagSectionHandler
 
-A simple section is what I call a section that doesn't belong to a section group. Below I've shown the most basic section configuration possible. There are variances to this. Please see the advanced section in the wiki to see how to do more complex linking of properties, setting defaults and using more complex section types.
+Below I've shown the most basic section configuration possible. There are variances to this. Please see the advanced section in the wiki to see how to do more complex linking of properties, setting defaults and using more complex section types.
 
 # Example
 
@@ -55,7 +55,7 @@ namespace CodeSandboxConfigAssistTests
     }
 }
 ```
-That's it, the class is configured, now all we need to do is query it out. There is an Interface for this for if you want to use injection. In the example below though, I will just strongly reference a new instance of it.
+Notice that two of the properties aren't strings, ConfigurationAssist will automatically convert primitive types for you. That's it, the class is configured, now all we need to do is query it out. There is an Interface for this for if you want to use injection. In the example below though, I will just strongly reference a new instance of it.
 
 To retrieve your configuration settings:
 ```C#
