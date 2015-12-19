@@ -1,7 +1,17 @@
 # ConfigurationAssist
-A project to simplify reading config application/web config files in .Net
+A project to simplify reading config application/web config files in .Net.
+Currently ConfigurationAssist can easily extract the following setting types:
+* AppSettings (Partial or full - uses simple key mapping)
+* Sections (NameValue Type)
+* Sections (Dictionary Type)
+* Sections (SingleTag Type)
+* Sections (Custom Type - only simple objects so far)
 
-# Description
+Simply create your configuration in either your web.config or app.config, Create a simple C# class with the same properties, then call ExtractSettings<T> where T is your settings class name.
+
+Below we will show a full example using a SingleTag type section:
+
+#SingleTagSectionHandler
 
 A simple section is what I call a section that doesn't belong to a section group. Below I've shown the most basic section configuration possible. There are variances to this. Please see the advanced section in the wiki to see how to do more complex linking of properties, setting defaults and using more complex section types.
 
