@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Configuration;
 using System.Linq;
+using System.Xml;
 using ConfigurationAssist.Common;
 using ConfigurationAssist.CustomAttributes;
 using ConfigurationAssist.Interfaces;
@@ -30,7 +31,6 @@ namespace ConfigurationAssist.ConfigurationExtractionStrategies
 
         private T ExtractConfigurationSection<T>() where T : class, new()
         {
-
             if (string.IsNullOrEmpty(FullSectionName))
             {
                 FullSectionName = GetConfigurationSectionName(typeof(T));
@@ -52,29 +52,58 @@ namespace ConfigurationAssist.ConfigurationExtractionStrategies
                         typeof(T).Name));
             }
 
-            var properties = typeof(T).GetProperties();
-            foreach (var property in properties)
-            {
-                var attribute = property.GetCustomAttributes(typeof(ConfigurationPropertyAttribute), true);
-                if (!attribute.Any())
-                {
-                    continue;
-                }
+            
+            var xdoc = new XmlDocument();
+            xdoc.Load(AppDomain.CurrentDomain.SetupInformation.ConfigurationFile);
+            var xnode = xdoc.SelectSingleNode(string.Format("/configuration/{0}", FullSectionName));
+            var output = Activator.CreateInstance(typeof (T));
+            ExtractNodeToObject(xnode, output, typeof (T));
 
-                var name = ((ConfigurationPropertyAttribute)attribute.First()).Name;
-                var propertyValue = baseType.ElementInformation.Properties[name];
-                if (propertyValue == null)
-                {
-                    continue;
-                }
-
-                var convertedValue = _converter.Convert(property.PropertyType, propertyValue.Value);
-                property.SetValue(configuration, convertedValue, null);
-            }
-
-            return configuration;
+            return output as T;
         }
 
+        private void ExtractNodeToObject(XmlNode node, object output, Type type)
+        {
+            if (node == null)
+            {
+                return;
+            }
+            
+            var properties = type.GetProperties();
+            foreach (var property in properties)
+            {
+                string keyName;
+                
+                var attribute = property.GetCustomAttributes(typeof (ConfigurationPropertyAttribute), true);
+                if (!attribute.Any())
+                {
+                    keyName = property.Name;
+                }
+                else
+                {
+                    var propertyAttribute = (ConfigurationPropertyAttribute)attribute.First();
+                    keyName = propertyAttribute.Name;
+                }
+
+                if (node.Attributes != null && node.Attributes[keyName] != null)
+                {
+                    var convertedValue = _converter.Convert(property.PropertyType, node.Attributes[keyName].Value);
+                    property.SetValue(output, convertedValue, null);
+                    continue;
+                }
+
+                if (property.PropertyType.BaseType != typeof (ConfigurationElement) ||
+                    node.SelectSingleNode(keyName) == null)
+                {
+                    continue;
+                }
+
+                var obj = Activator.CreateInstance(property.PropertyType);
+                ExtractNodeToObject(node.SelectSingleNode(keyName), obj, property.PropertyType);
+                property.SetValue(output, obj, null);
+            }
+        }
+        
         private string GetConfigurationSectionName(Type type)
         {
             var attr = type.GetCustomAttributes(typeof(ConfigurationSectionItem), true).AsQueryable();

@@ -91,7 +91,7 @@ namespace ConfigurationAssist.Tests
             Assert.That(typedPropertiesConfiguration.IntValue, Is.EqualTo(1));
             Assert.That(typedPropertiesConfiguration.LongValue, Is.EqualTo(23L));
             Assert.That(typedPropertiesConfiguration.StringValue, Is.EqualTo("Test"));
-            Assert.That(typedPropertiesConfiguration.NotConfigured, Is.EqualTo(string.Empty));
+            Assert.That(typedPropertiesConfiguration.NotConfigured, Is.Null);
             Assert.That(typedPropertiesConfiguration.NotConfiguredNullableInt, Is.Null);
         }
 
@@ -227,7 +227,7 @@ namespace ConfigurationAssist.Tests
             Assert.That(typedPropertiesConfiguration.IntValue, Is.EqualTo(1));
             Assert.That(typedPropertiesConfiguration.LongValue, Is.EqualTo(23L));
             Assert.That(typedPropertiesConfiguration.StringValue, Is.EqualTo("Test"));
-            Assert.That(typedPropertiesConfiguration.NotConfigured, Is.EqualTo(string.Empty));
+            Assert.That(typedPropertiesConfiguration.NotConfigured, Is.Null);
             Assert.That(typedPropertiesConfiguration.NotConfiguredNullableInt, Is.Null);
         }
 
@@ -298,6 +298,15 @@ namespace ConfigurationAssist.Tests
             Assert.That(settings, Is.Not.Null);
             Assert.That(settings.Name, Is.EqualTo("TestName"));
             Assert.That(settings.Value, Is.EqualTo("TestValue"));
+        }
+
+        [Test]
+        public void ExtractSettings_Should_ReturnComplexSetting_When_ComplexSettingsSpecified()
+        {
+            var settings = _configurationAssist.ExtractSettings<ComplexSettings>();
+            Assert.That(settings, Is.Not.Null);
+            Assert.That(settings.Name, Is.Not.Empty);
+            Assert.That(settings.Sub, Is.Not.Null);
         }
     }
 }

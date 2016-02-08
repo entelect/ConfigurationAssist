@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel;
+using System.Configuration;
 
 namespace ConfigurationAssist.Common
 {
@@ -17,6 +18,11 @@ namespace ConfigurationAssist.Common
             if (type.IsGenericType && type.GetGenericTypeDefinition() == typeof(Nullable<>))
             {
                 return null;
+            }
+
+            if (type.BaseType != null && type.BaseType != typeof (object) && type.BaseType != typeof(ValueType))
+            {
+                return Activator.CreateInstance(type);
             }
 
             try

@@ -42,6 +42,7 @@
     <Compile Include="ConfigurationAssistTests.cs" />
     <Compile Include="Configuration\AppSettingsConfiguration.cs" />
     <Compile Include="Configuration\AutomaticConfiguration.cs" />
+    <Compile Include="Configuration\ComplexSettings.cs" />
     <Compile Include="Configuration\DictionarySectionConfiguration.cs" />
     <Compile Include="Configuration\FailConfigSection.cs" />
     <Compile Include="Configuration\SingleTagSectionConfiguration.cs" />
