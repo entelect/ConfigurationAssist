@@ -7,7 +7,7 @@ namespace ConfigurationAssist.ConfigurationExtractionStrategies
 {
     public class AppSettingExtractionStrategy: IConfigurationExtractionStrategy
     {
-        private readonly Conversion _converter;
+        readonly Conversion _converter;
 
         public AppSettingExtractionStrategy()
         {

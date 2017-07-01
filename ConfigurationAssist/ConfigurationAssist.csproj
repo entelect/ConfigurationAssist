@@ -33,7 +33,6 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Configuration" />
-    <Reference Include="System.Core" />
     <Reference Include="System.XML" />
   </ItemGroup>
   <ItemGroup>
@@ -50,6 +49,13 @@
     <Compile Include="Interfaces\IConfigurationAssist.cs" />
     <Compile Include="Interfaces\IConfigurationExtractionStrategy.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Common\ComplexTypeSectionHandler.cs" />
+    <Compile Include="ConfigurationExtractionStrategies\ComplexTypeExtractionStrategy.cs" />
+    <Compile Include="GlobalSuppressions.cs" />
+    <Compile Include="Extensions\XmlExtensions.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Extensions\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

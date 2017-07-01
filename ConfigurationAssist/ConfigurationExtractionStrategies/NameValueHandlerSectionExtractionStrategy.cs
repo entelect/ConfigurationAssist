@@ -6,9 +6,9 @@ using ConfigurationAssist.Interfaces;
 
 namespace ConfigurationAssist.ConfigurationExtractionStrategies
 {
-    public class NameValueHandlerSectionExtractionStrategy: IConfigurationExtractionStrategy
+    public class NameValueHandlerSectionExtractionStrategy : IConfigurationExtractionStrategy
     {
-        private readonly Conversion _converter;
+        readonly Conversion _converter;
 
         public NameValueHandlerSectionExtractionStrategy(string fullSectionName) : this()
         {
@@ -26,9 +26,9 @@ namespace ConfigurationAssist.ConfigurationExtractionStrategies
         {
             if (string.IsNullOrEmpty(FullSectionName))
             {
-                FullSectionName = typeof (T).Name;
+                FullSectionName = typeof(T).Name;
             }
-            
+
             var configuration = (NameValueCollection)ConfigurationManager.GetSection(FullSectionName);
             if (configuration == null)
             {

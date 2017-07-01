@@ -24,7 +24,7 @@ namespace ConfigurationAssist
         {
             if (string.IsNullOrEmpty(sectionName))
             {
-                throw new ArgumentNullException("sectionName");
+                throw new ArgumentNullException(nameof(sectionName));
             }
 
             var fullSectionName = sectionGroup == null
@@ -86,12 +86,12 @@ namespace ConfigurationAssist
             }
         }
 
-        private ConfigurationSectionItem GetConfigurationSectionItem(Type type)
+        ConfigurationSectionItem GetConfigurationSectionItem(Type type)
         {
             var attr = type.GetCustomAttributes(typeof(ConfigurationSectionItem), true).AsQueryable();
             if (attr.Any())
             {
-                return (ConfigurationSectionItem) attr.First();
+                return (ConfigurationSectionItem)attr.First();
             }
 
             return new ConfigurationSectionItem(type.Name);

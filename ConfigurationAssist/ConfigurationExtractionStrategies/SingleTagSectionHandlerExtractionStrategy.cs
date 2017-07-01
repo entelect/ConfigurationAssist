@@ -17,6 +17,10 @@ namespace ConfigurationAssist.ConfigurationExtractionStrategies
 
         public T ExtractConfiguration<T>() where T : class, new()
         {
+            if (string.IsNullOrEmpty(FullSectionName))
+            {
+                FullSectionName = typeof(T).Name;
+            }
             var dictionaryExtractionStrategy = new DictionarySectionHandlerExtractionStrategy(FullSectionName);
             return dictionaryExtractionStrategy.ExtractConfiguration<T>();
         }

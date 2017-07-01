@@ -1,6 +1,5 @@
 ﻿using System;
 using System.ComponentModel;
-using System.Configuration;
 
 namespace ConfigurationAssist.Common
 {
@@ -20,17 +19,24 @@ namespace ConfigurationAssist.Common
                 return null;
             }
 
-            if (type.BaseType != null && type.BaseType != typeof (object) && type.BaseType != typeof(ValueType))
+            if (type.BaseType != null && type.BaseType != typeof(object) && type.BaseType != typeof(ValueType))
             {
                 return Activator.CreateInstance(type);
             }
 
+            if (type.BaseType != null && type.BaseType == typeof(object) && input.ToString() == typeof(object).ToString())
+            {
+                return converter.ConvertFromString(string.Empty);
+            }
+
             try
             {
-                return converter.ConvertFromString(input.ToString());
+                string value = input.ToString();
+                return converter.ConvertFromString(value);
             }
-            catch
+            catch(Exception ex)
             {
+                Console.WriteLine(ex.Message);
                 return null;
             }
         }

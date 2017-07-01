@@ -8,7 +8,7 @@ namespace ConfigurationAssist.ConfigurationExtractionStrategies
 {
     public class DictionarySectionHandlerExtractionStrategy : IConfigurationExtractionStrategy
     {
-        private readonly Conversion _converter;
+        readonly Conversion _converter;
 
         public DictionarySectionHandlerExtractionStrategy(string fullSectionName) : this()
         {
@@ -26,7 +26,7 @@ namespace ConfigurationAssist.ConfigurationExtractionStrategies
         {
             if (string.IsNullOrEmpty(FullSectionName))
             {
-                FullSectionName = typeof (T).Name;
+                FullSectionName = typeof(T).Name;
             }
 
             var configuration = (Hashtable)ConfigurationManager.GetSection(FullSectionName);

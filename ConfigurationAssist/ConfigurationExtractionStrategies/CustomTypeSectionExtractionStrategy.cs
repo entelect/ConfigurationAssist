@@ -10,7 +10,7 @@ namespace ConfigurationAssist.ConfigurationExtractionStrategies
 {
     public class CustomTypeSectionExtractionStrategy : IConfigurationExtractionStrategy
     {
-        private readonly Conversion _converter;
+        readonly Conversion _converter;
 
         public CustomTypeSectionExtractionStrategy(string fullSectionName) : this()
         {
@@ -23,13 +23,13 @@ namespace ConfigurationAssist.ConfigurationExtractionStrategies
         }
 
         public string FullSectionName { get; set; }
-        
+
         public T ExtractConfiguration<T>() where T : class, new()
         {
             return ExtractConfigurationSection<T>();
         }
 
-        private T ExtractConfigurationSection<T>() where T : class, new()
+        T ExtractConfigurationSection<T>() where T : class, new()
         {
             if (string.IsNullOrEmpty(FullSectionName))
             {
@@ -52,29 +52,29 @@ namespace ConfigurationAssist.ConfigurationExtractionStrategies
                         typeof(T).Name));
             }
 
-            
+
             var xdoc = new XmlDocument();
             xdoc.Load(AppDomain.CurrentDomain.SetupInformation.ConfigurationFile);
             var xnode = xdoc.SelectSingleNode(string.Format("/configuration/{0}", FullSectionName));
-            var output = Activator.CreateInstance(typeof (T));
-            ExtractNodeToObject(xnode, output, typeof (T));
+            var output = Activator.CreateInstance(typeof(T));
+            ExtractNodeToObject(xnode, output, typeof(T));
 
             return output as T;
         }
 
-        private void ExtractNodeToObject(XmlNode node, object output, Type type)
+        void ExtractNodeToObject(XmlNode node, object output, Type type)
         {
             if (node == null)
             {
                 return;
             }
-            
+
             var properties = type.GetProperties();
             foreach (var property in properties)
             {
                 string keyName;
-                
-                var attribute = property.GetCustomAttributes(typeof (ConfigurationPropertyAttribute), true);
+
+                var attribute = property.GetCustomAttributes(typeof(ConfigurationPropertyAttribute), true);
                 if (!attribute.Any())
                 {
                     keyName = property.Name;
@@ -92,7 +92,7 @@ namespace ConfigurationAssist.ConfigurationExtractionStrategies
                     continue;
                 }
 
-                if (property.PropertyType.BaseType != typeof (ConfigurationElement) ||
+                if (property.PropertyType.BaseType != typeof(ConfigurationElement) ||
                     node.SelectSingleNode(keyName) == null)
                 {
                     continue;
@@ -103,8 +103,8 @@ namespace ConfigurationAssist.ConfigurationExtractionStrategies
                 property.SetValue(output, obj, null);
             }
         }
-        
-        private string GetConfigurationSectionName(Type type)
+
+        string GetConfigurationSectionName(Type type)
         {
             var attr = type.GetCustomAttributes(typeof(ConfigurationSectionItem), true).AsQueryable();
             if (!attr.Any())

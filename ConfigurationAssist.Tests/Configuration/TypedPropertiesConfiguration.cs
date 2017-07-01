@@ -2,7 +2,7 @@
 
 namespace ConfigurationAssist.Tests.Configuration
 {
-    public class TypedPropertiesConfiguration :ConfigurationSection
+    public class TypedPropertiesConfiguration : ConfigurationSection
     {
         [ConfigurationProperty("intValue")]
         public int IntValue { get; set; }

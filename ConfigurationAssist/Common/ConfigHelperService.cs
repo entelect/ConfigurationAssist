@@ -5,8 +5,8 @@ namespace ConfigurationAssist.Common
 {
     public class ConfigHelperService
     {
-        private readonly Conversion _converter = new Conversion();
- 
+        readonly Conversion _converter = new Conversion();
+
         public T CreateSettingsWithDefaults<T>() where T : class, new()
         {
             var setting = new T();
